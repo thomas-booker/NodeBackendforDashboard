@@ -209,22 +209,24 @@ router.get('/getmaint', function(req, res) {
         "Data":""
     };
     connection.query("SELECT * FROM maintenance ORDER BY datefrom", function(err, rows, fields) {
-        if (rows.length != 0) {
+        /*if (rows.length != 0) {
             data["Data"] = rows;
             res.jsonp(data);
-            console.log(data);
+            //console.log(data);
         } else {
             data["Data"] = "No data found...';";
 
-        }
+        }*/
+        data["Data"] = rows;
+        res.jsonp(data);
     });
 });
 router.post('/addmaint', function(req, res) {
     //console.log(req);
     var item = req.body;
     console.log(item);
-    var query = "INSERT INTO maintenance (title, msg, datefrom, dateto)" +
-        "VALUES ('" + item.title + "','" + item.maint + "','" +
+    var query = "INSERT INTO maintenance (title, datefrom, dateto)" +
+        "VALUES ('" + item.title + "','" +
         item.datefrom + " " + item.timefrom + "','" +
         item.dateto + " " + item.timeto + "')";
     connection.query(query);
@@ -240,13 +242,128 @@ router.post('/deletemaint', function(req, res) {
 router.post('/editmaint', function(req, res) {
     //console.log(req);
     var item = req.body;
-    console.log(item);
-    console.log("UPDATE maintenance SET title='" + req.body.title + "', msg='" +
-        req.body.maint + "' WHERE id='" + req.body.id + "'");
-    connection.query("UPDATE maintenance SET title='" + req.body.title + "', msg='" +
-        req.body.maint + "' WHERE id='" + req.body.id + "'");
-    res.redirect('http://localhost:80/maint.html');
+    //console.log(item);
+    /* console.log("UPDATE maintenance SET title='" + req.body.title + "', msg='" +
+        req.body.maint + "' WHERE id='" + req.body.id + "'"); */
+    connection.query("UPDATE maintenance SET title='" + item.title + "', " +
+        "datefrom='" + item.datef + " " + item.timef + "', " +
+        "dateto='" + item.datet + " " + item.timet + "'" +
+        " WHERE id='" + item.id + "'");
+    //res.redirect('http://localhost:80/maint.html');
     res.end();
+});
+
+/*
+ Applications Status
+ */
+
+router.get('/getapps', function(req, res) {
+    var data = {
+        "Data":""
+    };
+    connection.query("SELECT * FROM apps ORDER BY appname", function(err, rows, fields) {
+        if (rows.length != 0) {
+            data["Data"] = rows;
+            res.jsonp(data);
+            //console.log(data);
+        } else {
+            data["Data"] = "No data found...';";
+
+        }
+    });
+});
+router.post('/addapp', function(req, res) {
+    //console.log(req);
+    var item = req.body;
+    console.log(item);
+    /* console.log("UPDATE maintenance SET title='" + req.body.title + "', msg='" +
+        req.body.maint + "' WHERE id='" + req.body.id + "'"); */
+    console.log("INSERT INTO apps (appname, appstatus)" +
+        " VALUES ('" + item.name  + "," + item.status + ")");
+    connection.query("INSERT INTO apps (appname, appstatus)" +
+        " VALUES ('" + item.name  + "'," + item.status + ")");
+    //res.redirect('http://localhost:80/apps.html');
+    res.end();
+});
+router.post('/editappstatus', function(req, res) {
+    //console.log(req);
+    var item = req.body;
+    console.log(item);
+    /* console.log("UPDATE maintenance SET title='" + req.body.title + "', msg='" +
+        req.body.maint + "' WHERE id='" + req.body.id + "'"); */
+    connection.query("UPDATE apps SET appstatus='" + req.body.item +
+        "' WHERE appid='" + req.body.id + "'");
+    //res.redirect('http://localhost:80/apps.html');
+    res.end();
+});
+router.post('/editappname', function(req, res) {
+    //console.log(req);
+    var item = req.body;
+    console.log(item);
+    /* console.log("UPDATE maintenance SET title='" + req.body.title + "', msg='" +
+        req.body.maint + "' WHERE id='" + req.body.id + "'"); */
+    connection.query("UPDATE apps SET appname='" + req.body.name +
+        "' WHERE appid='" + req.body.id + "'");
+    //res.redirect('http://localhost:80/apps.html');
+    res.end();
+});
+router.post('/deleteapp', function(req, res) {
+    //console.log(req);
+    var item = req.body;
+    console.log(item);
+    /* console.log("UPDATE maintenance SET title='" + req.body.title + "', msg='" +
+        req.body.maint + "' WHERE id='" + req.body.id + "'"); */
+    connection.query("DELETE FROM apps WHERE appid='" + req.body.id + "'");
+    //res.redirect('http://localhost:80/apps.html');
+    res.end();
+});
+
+/*
+    Page change functions
+ */
+router.get('/getpagechange', function(req, res) {
+    var data = {
+        "Data":""
+    };
+    connection.query("SELECT * FROM pagechange", function(err, rows, fields) {
+        if (rows.length != 0) {
+            data["Data"] = rows;
+            res.jsonp(data);
+            //console.log(data);
+        } else {
+            data["Data"] = "No data found...';";
+
+        }
+    });
+});
+router.post('/changepage', function(req, res) {
+    //console.log(req);
+    var item = req.body;
+    console.log(item);
+    /* console.log("UPDATE maintenance SET title='" + req.body.title + "', msg='" +
+        req.body.maint + "' WHERE id='" + req.body.id + "'"); */
+    connection.query("UPDATE pagechange SET state='" + req.body.status +
+        "' WHERE id='" + req.body.id + "'");
+    //res.redirect('http://localhost:80/apps.html');
+    res.end();
+});
+
+/*
+ Team Meeting
+ */
+
+router.get('/getmeeting', function(req, res) {
+    var data = {
+        "Data":""
+    };
+    connection.query("SELECT * FROM meeting", function(err, rows, fields) {
+        if (rows.length != 0) {
+            data["Data"] = rows;
+            res.jsonp(data);
+            //console.log(data);
+        }
+        res.jsonp(data);
+    });
 });
 
 module.exports = router;
